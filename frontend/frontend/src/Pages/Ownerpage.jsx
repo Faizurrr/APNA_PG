@@ -52,7 +52,8 @@ export default function OwnerPage() {
     };
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/ownerdata", {
+    const API_URL = "https://apna-pg-in.onrender.com"
+      const res = await fetch(`${API_URL}/ownerdata`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

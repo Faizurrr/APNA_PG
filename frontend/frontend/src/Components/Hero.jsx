@@ -1,4 +1,8 @@
+// Pages/Hero.jsx
 import React, { useState } from "react";
+
+// Set your live backend URL here
+const API_URL = "https://apna-pg-in.onrender.com";
 
 export default function Hero() {
   const [search, setSearch] = useState("");
@@ -11,28 +15,28 @@ export default function Hero() {
       alert("Please enter a location");
       return;
     }
-   
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/pgs?location=${encodeURIComponent(
-          search
-        )}&price=${encodeURIComponent(priceRange)}`
+        `${API_URL}/api/pgs?location=${encodeURIComponent(search)}&price=${encodeURIComponent(priceRange)}`
       );
-      
+
       const data = await response.json();
       setResults(data);
       setSelectedPg(null);
-      if(data.length==0){ // data.length == 0 ka matlab koi response nhi aay h  backend se 
-         alert("Room not availabe on this location or in this price");
-         return;
+
+      if (data.length === 0) {
+        alert("Room not available at this location or in this price range");
+        return;
       }
-         setTimeout(() => {
-      setResults([]);
-    }, 30000);  // 30k mili second = 30 second
-  
+
+      // Auto-clear results after 30 seconds
+      setTimeout(() => {
+        setResults([]);
+      }, 30000);
     } catch (error) {
       console.error("Error fetching data:", error);
+      alert("Failed to fetch data from the server. Please try again later.");
     }
   };
 
@@ -84,12 +88,7 @@ export default function Hero() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </div>
 
@@ -101,7 +100,7 @@ export default function Hero() {
             Find
           </button>
         </div>
-        
+
         {/* Display Results */}
         <div className="mt-10 max-w-3xl mx-auto text-left text-white">
           {results.length > 0 ? (
@@ -122,23 +121,21 @@ export default function Hero() {
                     <p>{pg.address}</p>
                     <p className="text-sm text-gray-600">₹{pg.price} / month</p>
 
-                    {/* 👇 Show details only for selected PG */}
+                    {/* Show details only for selected PG */}
                     {selectedPg && selectedPg.id === pg.id && (
                       <div className="mt-4 bg-gray-50 p-4 rounded-lg text-gray-700 space-y-2">
-                       
                         <p>
                           <strong>Owner:</strong> {pg.owner_name || "Not listed"}
                         </p>
                         <p>
-                          <strong>Contact:</strong> {pg.phone_number|| "Not available"}
+                          <strong>Contact:</strong> {pg.phone_number || "Not available"}
                         </p>
-                         <p>
-                          <strong>email:</strong> {pg.email|| "Not available"}
+                        <p>
+                          <strong>Email:</strong> {pg.email || "Not available"}
                         </p>
-                       
 
                         <div className="flex flex-wrap gap-3 mt-3">
-                          {/* 📞 Call Button */}
+                          {/* Call Button */}
                           <a
                             href={`tel:${pg.phone_number}`}
                             className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
@@ -146,7 +143,7 @@ export default function Hero() {
                             📞 Call Owner
                           </a>
 
-                          {/* 📧 Email Button */}
+                          {/* Email Button */}
                           <a
                             href={`mailto:${pg.email}?subject=Interested in your PG&body=Hi ${pg.owner_name},%0D%0A%0D%0AI am interested in your PG. Please let me know the details.`}
                             className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors"

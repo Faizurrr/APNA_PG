@@ -28,7 +28,8 @@ export default function LoginPage() {
       console.log("Sending login data:", formData);
 
       // -------- Login request --------
-      const response = await fetch("http://127.0.0.1:5000/login", {
+     const API_URL = "https://apna-pg-in.onrender.com"; // url of backend which is live at render
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -54,7 +55,7 @@ export default function LoginPage() {
 
         // -------- Verify token safely --------
         try {
-          const verifyResponse = await fetch("http://127.0.0.1:5000/verify", {
+          const verifyResponse = await fetch(`${API_URL}/verify`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${data.token}`,
@@ -70,7 +71,7 @@ export default function LoginPage() {
 
         // -------- Call protected homepage safely --------
         try {
-          const homepageResponse = await fetch("http://127.0.0.1:5000/homepage", {
+          const homepageResponse = await fetch(`${API_URL}/homepage`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${data.token}`,
